@@ -1,0 +1,23 @@
+{
+  "name": "papercut",
+  "version": "0.0.1",
+  "description": "Papercut is a node package to handle image upload, resize and sync with Amazon s3",
+  "main": "index.js",
+  "scripts": {
+    "test": "cake test"
+  },
+  "repository": "",
+  "dependencies": {
+    "coffee-script": "1.4.x",
+    "imagemagick": "git://github.com/rsms/node-imagemagick.git",
+    "knox": "0.3.x",
+    "async": "0.1.x"
+  },
+  "devDependencies": {
+    "mocha": "1.3.x",
+    "should": "*",
+    "express": "3.0.x"
+  },
+  "author": "Jimmy Chao",
+  "license": "MIT"
+}
