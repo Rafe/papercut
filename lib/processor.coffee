@@ -1,6 +1,11 @@
 fs = require('fs')
 im = require('imagemagick')
 
+###
+Process call node-imagemagick module to process images
+and return file stream to callback
+###
+
 module.exports = class Processor
   constructor: (@config)->
 
@@ -8,27 +13,67 @@ module.exports = class Processor
     s = size.split('x')
     width: s[0], height: s[1]
 
+  ###
+  Resize and crop image using node-imagemagic's crop method
+
+  @param {String} name
+  @param {String} path
+  @param {Object} version
+  @param {Function} callback
+
+  @api private
+  ###
   crop: (name, path, version, callback)->
-    size = @getSize(version.size)
-    params =
-      srcPath: path
-      width: size.width
-      height: size.height
-      format: @config.extension
-      quality: @config.quality
+    @process('crop', name, path, version, callback)
 
-    im.crop params, callback
+  ###
+  Resize image
 
+  @param {String} name
+  @param {String} path
+  @param {Object} version
+  @param {Function} callback
+
+  @api private
+  ###
   resize: (name, path, version, callback)->
+    @process('resize', name, path, version, callback)
+
+  ###
+  Copy image
+
+  @param {String} name
+  @param {String} path
+  @param {Object} version
+  @param {Function} callback
+
+  @api private
+  ###
+  copy: (name, path, version, callback)->
+    if name.indexOf @config.extension isnt -1
+      fs.readFile path, 'binary', callback
+    else
+      callback(new Error("file extension is not #{@config.extension}"))
+
+  ###
+  Process image with methods,
+  build params and call node-imagemagick's method
+
+  @param {String} method
+  @param {String} name
+  @param {String} path
+  @param {Object} version
+  @param {Function} callback
+
+  @api private
+  ###
+  process: (method, name, path, version, callback)->
     size = @getSize(version.size)
     params =
       srcPath: path
       width: size.width
       height: size.height
-      format: @config.extension
-      quality: @config.quality
+      format: version.extension or @config.extension
+      quality: version.quality or @config.quality
 
-    im.resize params, callback
-
-  copy: (name, path, version, callback)->
-    fs.readFile path, 'binary', callback
+    im[method] params, callback

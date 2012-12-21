@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Papercut is a node package to handle image upload, resize and sync with Amazon s3",
   "main": "index.js",
+  "keywords": ["imagemagick", "image", "process", "s3"],
   "scripts": {
     "test": "cake test"
   },
@@ -18,6 +19,6 @@
     "should": "*",
     "express": "3.0.x"
   },
-  "author": "Jimmy Chao",
+  "author": "Jimmy Chao (daizenga@gmail.com)",
   "license": "MIT"
 }

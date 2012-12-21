@@ -1,6 +1,7 @@
 --compilers coffee:coffee-script
 --require should
 --require coffee-script
+--require test/test_helper.coffee
 --reporter spec
 --colors
 --growl

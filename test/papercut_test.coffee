@@ -1,5 +1,8 @@
 fs = require('fs')
 
+sample = './images/sample.jpg'
+errorSample = './images/error.jpg'
+
 describe 'papercut', ->
   papercut = ''
 
@@ -16,12 +19,12 @@ describe 'papercut', ->
     papercut.get('process').should.eql 'resize'
 
   describe '.configure', ->
-    it 'execute in all env', ->
+    it 'executed in all env', ->
       papercut.configure ->
         papercut.set 'flag', true
       papercut.get('flag').should.be.true
 
-    it 'execute in specific env', ->
+    it 'executed in specific env', ->
       process.env.NODE_ENV = 'test'
       papercut.configure 'test', ->
         papercut.set 'flag', true
@@ -34,10 +37,9 @@ describe 'papercut', ->
     it 'run initialize function', (done)->
       Uploader = papercut.Schema (schema)->
         schema.should.be.instanceof(Uploader)
-        @should.be.instanceof(Uploader)
+        this.should.be.instanceof(Uploader)
         done()
       uploader = new Uploader()
-      uploader.should.be.instanceof(Uploader)
 
     it 'store configs', ->
       papercut.set('flag', on)
@@ -70,27 +72,44 @@ describe 'papercut', ->
       uploader = ''
       beforeEach ->
         papercut.set('directory', './images/output')
+        papercut.set('url', '/images')
         Uploader = papercut.Schema ->
           @version
-            name: 'test'
+            name: 'cropped'
             size: '250x250'
             process: 'crop'
+          @version
+            name: 'origin'
+            process: 'copy'
+          @version
+            name: 'resized'
+            size: '250x250'
+            process: 'resize'
         uploader = new Uploader()
 
-      it 'store image to directory', (done)->
-        uploader.process 'test', './images/sample.jpg', (err, images)->
-          fs.existsSync('./images/output/test-test.jpg').should.be.true
+      it 'process and store image to directory', (done)->
+        uploader.process 'test', sample, (err, images)->
+          fs.existsSync('./images/output/test-cropped.jpg').should.be.true
+          fs.existsSync('./images/output/test-resized.jpg').should.be.true
+          fs.existsSync('./images/output/test-origin.jpg').should.be.true
+          images.origin.should.eql '/images/test-origin.jpg'
+          images.cropped.should.eql '/images/test-cropped.jpg'
+          images.resized.should.eql '/images/test-resized.jpg'
           done()
 
       it 'should handle error', (done)->
-        uploader.process 'error', './images/error.jpg', (err, images)->
-          fs.existsSync('./images/output/error-test.jpg').should.be.false
+        uploader.process 'error', errorSample, (err, images)->
+          fs.existsSync('./images/output/error-cropped.jpg').should.be.false
+          fs.existsSync('./images/output/error-resized.jpg').should.be.false
+          # copy will still copy file
+          fs.existsSync('./images/output/error-origin.jpg').should.be.true
           err.should.be.ok
           done()
 
-      after ->
-        [
-          './images/output/error-test.jpg'
-          './images/output/test-test.jpg'
-        ].forEach (image)->
-          fs.unlinkSync(image) if fs.existsSync(image)
+      #should in processor_test
+      it 'should throw no file error', (done)->
+        uploader.process 'nofile', './images/nofile.jpg', (err, images)->
+          err.should.be.ok
+          done()
+
+      after cleanFiles

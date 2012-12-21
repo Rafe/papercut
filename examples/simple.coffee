@@ -1,4 +1,4 @@
-papercut = require('./lib/papercut')
+papercut = require('../')
 
 papercut.configure ->
   papercut.set('storage', 'file')
@@ -7,7 +7,7 @@ papercut.configure ->
 
 papercut.configure 'production', ->
   papercut.set('storage', 's3')
-  papercut.set('bucket', 'cookhub')
+  papercut.set('bucket', 'test')
   papercut.set('S3_KEY', process.env.S3_KEY)
   papercut.set('S3_SECRET', process.env.S3_SECRET)
 
@@ -29,5 +29,4 @@ Uploader = papercut.Schema (schema)->
 uploader = new Uploader()
 
 uploader.process 'test', './images/sample.jpg', (err, images)->
-  console.log images.test
-  console.log images.large
+  console.log images.images
