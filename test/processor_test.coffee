@@ -40,5 +40,5 @@ describe "Processor", ->
     it "should handle error", (done)->
       processor.crop 'test', './images/error.jpg', version, (err, stdout, stderr)->
         err?.should.be.ok
-        err.message.should.match /Error/
+        err.message?.should.be.ok
         done()

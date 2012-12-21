@@ -33,7 +33,7 @@ describe 'FileStore', ->
     it 'should save file', (done)->
       stream = fs.createReadStream('./images/sample.jpg')
       store.save 'test', version, stream, null, (err, url)->
-        fs.existsSync(dir + '/test-test.jpg').should.be.ok
+        fs.existsSync(path.join(dir, '/test-test.jpg')).should.be.ok
         url.should.eql '/images/test-test.jpg'
         store.result[version.name].should.eql '/images/test-test.jpg'
         done()
