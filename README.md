@@ -8,6 +8,12 @@ Papercut handle image processing, versioning and storage for you, in node.js.
 + node-imagemagick integration for image resize, crop and copy.
 + S3 image upload
 
+## Install
+
+In terminal:
+
+    npm install papercut --save
+
 ## Usage
 
     var papercut = require('papercut');
