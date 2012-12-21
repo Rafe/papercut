@@ -116,7 +116,7 @@ Also with images url in different versions:
 
 ##Express
 
-Check out the express example in project for how to use it in express framework.
+Check out the [express example](https://github.com/Rafe/papercut/blob/master/examples/express.coffee) in project for how to use it in express framework.
 
 ## Todos
 + Process image from previous one to improve processing speed.
