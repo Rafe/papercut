@@ -43,7 +43,7 @@ Papercut handle image processing, versioning and storage for you, in node.js.
     uploader = new AvatarUploader();
 
     uploader.process('image1.png', file.path, function(images){
-      console.log(images.avatar); // 'http://s3.amazon.com/papercut/image1.png'
+      console.log(images.avatar); // 'http://s3.amazon.com/papercut/image1-avatar.png'
       console.log(images.small); // 'http://s3.amazon.com/papercut/image1-small.png'
     })
 
