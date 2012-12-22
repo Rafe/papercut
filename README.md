@@ -25,7 +25,7 @@ In terminal:
     });
 
     papercut.configure('production', function(){
-      papercut.set('storage', 'S3')
+      papercut.set('storage', 's3')
       papercut.set('S3_KEY', process.env.S3_KEY)
       papercut.set('S3_SECRET', process.env.S3_SECRET)
       papercut.set('bucket', 'papercut')
@@ -49,8 +49,8 @@ In terminal:
     uploader = new AvatarUploader();
 
     uploader.process('image1', file.path, function(images){
-      console.log(images.avatar); // 'http://s3.amazon.com/papercut/image1-avatar.jpg'
-      console.log(images.small); // 'http://s3.amazon.com/papercut/image1-small.jpg'
+      console.log(images.avatar); // '/images/uploads/image1-avatar.jpg'
+      console.log(images.small); // '/images/uploads/image1-small.jpg'
     })
 
 ## Configuration
