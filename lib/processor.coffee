@@ -21,7 +21,7 @@ module.exports = class Processor
   @param {Object} version
   @param {Function} callback
 
-  @api private
+  @api public
   ###
   crop: (name, path, version, callback)->
     @process('crop', name, path, version, callback)
@@ -34,7 +34,7 @@ module.exports = class Processor
   @param {Object} version
   @param {Function} callback
 
-  @api private
+  @api public
   ###
   resize: (name, path, version, callback)->
     @process('resize', name, path, version, callback)
@@ -47,7 +47,7 @@ module.exports = class Processor
   @param {Object} version
   @param {Function} callback
 
-  @api private
+  @api public
   ###
   copy: (name, path, version, callback)->
     if name.indexOf @config.extension isnt -1

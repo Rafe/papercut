@@ -41,7 +41,7 @@ exports.FileStore = class FileStore
   @param {Object} stderr stream
   @param {Function} callback
 
-  @api private
+  @api public
   ###
   save: (name, version, stdout, stderr, callback)=>
     return callback(new Error(stderr)) if stderr? and stderr.length isnt 0
@@ -99,7 +99,7 @@ exports.S3Store = class S3Store
   @param {Object} stderr stream
   @param {Function} callback
 
-  @api private
+  @api public
   ###
   save: (name, version, stdout, stderr, callback)=>
     return callback(new Error(stderr)) if stderr? and stderr.length isnt 0
