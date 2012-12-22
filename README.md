@@ -4,7 +4,7 @@ Papercut handle image processing, versioning and storage for you, in node.js.
 
 ## Features
 
-+ envionment configuration
++ environment configuration
 + node-imagemagick integration for image resize, crop and copy.
 + S3 image upload
 
