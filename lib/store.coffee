@@ -125,4 +125,5 @@ exports.TestStore = class TestStore
     "#{name}-#{version.name}.#{@config.extension}"
 
   save: (name, version, stdout, stderr, callback)=>
-    callback(null, @getUrlPath(name, version))
+    @result[version.name] = @getUrlPath(name, version)
+    callback(null, @result[version.name])
