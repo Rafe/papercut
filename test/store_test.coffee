@@ -1,6 +1,6 @@
 fs = require('fs')
 path = require('path')
-{ FileStore, S3Store } = require('../lib/store')
+{ FileStore, S3Store , TestStore } = require('../lib/store')
 
 describe 'FileStore', ->
   store = ''
@@ -8,7 +8,6 @@ describe 'FileStore', ->
 
   beforeEach ->
     store = new FileStore
-      storage: 'file'
       extension: 'jpg'
       directory: dir
       url: '/images'
@@ -52,7 +51,6 @@ describe "S3Store", ->
 
   beforeEach ->
     store = new S3Store
-      storage: 's3'
       extension: 'jpg'
       bucket: 'test'
       S3_KEY: 'test'
@@ -90,3 +88,13 @@ describe "S3Store", ->
     store.save 'test', version, 'test', null, (err, url)->
       err.message.should.eql 'Upload Error'
       done()
+
+describe "TestStore", ->
+  it "do nothing on storing images", ->
+    version = 
+      name: 'test'
+      extension: 'jpg'
+    store = new TestStore
+      extension: 'jpg'
+    store.save 'test', version, 'test', null, (err, url)->
+      url.should.eql 'test-test.jpg'

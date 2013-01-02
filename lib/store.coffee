@@ -111,3 +111,18 @@ exports.S3Store = class S3Store
     @client.putBuffer buffer, dstPath, @headers, (err, res)=>
       @result[version.name] = @getUrlPath(name, version)
       callback(err, @result[version.name])
+
+###
+Test store for testing
+###
+exports.TestStore = class TestStore
+  constructor: (@config)->
+
+  getUrlPath: (name, version)->
+    "#{name}-#{version.name}.#{@config.extension}"
+
+  getDstPath: (name, version)->
+    "#{name}-#{version.name}.#{@config.extension}"
+
+  save: (name, version, stdout, stderr, callback)=>
+    callback(null, @getUrlPath(name, version))

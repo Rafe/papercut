@@ -1,6 +1,6 @@
 knox = require('knox')
 async = require('async')
-{FileStore, S3Store} = require('./store')
+{FileStore, S3Store, TestStore } = require('./store')
 Processor = require('./processor')
 
 config = {
@@ -99,6 +99,8 @@ module.exports = papercut =
           @store = new FileStore(@config)
         else if @config.storage is 's3'
           @store = new S3Store(@config)
+        else if @config.storage is 'test'
+          @store = new TestStore(@config)
         else
           throw new Error('No storage type')
 

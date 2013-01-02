@@ -3,6 +3,8 @@ fs = require('fs')
 sample = './images/sample.jpg'
 errorSample = './images/error.jpg'
 
+{ S3Store, FileStore, TestStore } = require('../lib/store')
+
 describe 'papercut', ->
   papercut = ''
 
@@ -30,6 +32,30 @@ describe 'papercut', ->
         papercut.set 'flag', true
       papercut.get('flag').should.be.true
 
+
+    describe 'storage', ->
+      it "initialize FileStore", ->
+        papercut.set 'storage', 'file'
+        Uploader = papercut.Schema ->
+        uploader = new Uploader()
+        uploader.store.should.be.an.instanceof FileStore
+
+      it "initialize S3Store", ->
+        papercut.set 'storage', 's3'
+        papercut.set 'S3_KEY', 'test'
+        papercut.set 'S3_SECRET', 'test'
+        papercut.set 'bucket', 'test'
+
+        Uploader = papercut.Schema ->
+        uploader = new Uploader()
+        uploader.store.should.be.an.instanceof S3Store
+
+      it "initialize TestStore", ->
+        papercut.set 'storage', 'test'
+        Uploader = papercut.Schema ->
+        uploader = new Uploader()
+        uploader.store.should.be.an.instanceof TestStore
+
     afterEach ->
       process.env.NODE_ENV = undefined
 
@@ -48,6 +74,7 @@ describe 'papercut', ->
       uploader = new Uploader()
       uploader.config.flag.should.be.ok
       uploader.config.store.should.eql 's3'
+      uploader.store
 
     it 'store versions', ->
       Uploader = papercut.Schema ->
@@ -68,11 +95,11 @@ describe 'papercut', ->
       version.size.should.eql '250x250'
 
     describe 'process', ->
-
       uploader = ''
       beforeEach ->
         papercut.set('directory', './images/output')
         papercut.set('url', '/images')
+        papercut.set('storage', 'file')
         Uploader = papercut.Schema ->
           @version
             name: 'cropped'
