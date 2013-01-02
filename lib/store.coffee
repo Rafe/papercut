@@ -117,6 +117,7 @@ Test store for testing
 ###
 exports.TestStore = class TestStore
   constructor: (@config)->
+    @result = {}
 
   getUrlPath: (name, version)->
     "#{name}-#{version.name}.#{@config.extension}"
