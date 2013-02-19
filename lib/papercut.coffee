@@ -8,7 +8,8 @@ config = {
   extension: 'jpg'
   process: 'resize'
   directory: '.'
-  quality: 1
+  quality: 1,
+  custom: []
 }
 
 module.exports = papercut =
