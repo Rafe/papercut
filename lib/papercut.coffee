@@ -24,11 +24,11 @@ module.exports = papercut =
         papercut.set('directory', './images/output')
         papercut.set('url', '/images/output')
 
-      papercut.configure 'production', ->
-        papercut.set('storage', 's3')
-        papercut.set('bucket', 'test')
-        papercut.set('S3_KEY', process.env.S3_KEY)
-        papercut.set('S3_SECRET', process.env.S3_SECRET)
+    papercut.configure 'production', ->
+      papercut.set('storage', 's3')
+      papercut.set('bucket', 'test')
+      papercut.set('S3_KEY', process.env.S3_KEY)
+      papercut.set('S3_SECRET', process.env.S3_SECRET)
 
   @param {String} env
   @param {Function} block

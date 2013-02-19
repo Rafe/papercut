@@ -104,6 +104,17 @@ After configuration, you can create an uploader to process images with multiple 
       });
     });
 
+You can also set custom param according to version
+
+    var Uploader = papercut.Schema(function(schema){
+      schema.version({
+        name: 'auto',
+        size: '120x120',
+        process: 'crop'
+        custom: ['-auto-orient']
+      });
+    });
+
 ## Process
 
 With uploader, you can pass the image identifier and image path to process images.  

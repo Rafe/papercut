@@ -7,6 +7,8 @@ and return file stream to callback
 ###
 
 module.exports = class Processor
+  im: im
+
   constructor: (@config)->
 
   getSize: (size)->
@@ -70,11 +72,11 @@ module.exports = class Processor
   process: (method, name, path, version, callback)->
     size = @getSize(version.size)
     params =
-      customArgs: version.custom or @config.custom
       srcPath: path
       width: size.width
       height: size.height
       format: version.extension or @config.extension
       quality: version.quality or @config.quality
+      customArgs: version.custom or @config.custom
 
-    im[method] params, callback
+    @im[method] params, callback
