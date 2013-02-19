@@ -70,6 +70,7 @@ module.exports = class Processor
   process: (method, name, path, version, callback)->
     size = @getSize(version.size)
     params =
+      customArgs: version.custom or @config.custom
       srcPath: path
       width: size.width
       height: size.height
