@@ -1,6 +1,6 @@
 {
   "name": "papercut",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Papercut is a node package to handle image upload, resize and sync with Amazon s3",
   "main": "index.js",
   "keywords": ["imagemagick", "image", "process", "s3"],
