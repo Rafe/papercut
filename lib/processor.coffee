@@ -1,13 +1,13 @@
 fs = require('fs')
-im = require('imagemagick')
+im = require('gm')
 
 ###
-Process call node-imagemagick module to process images
+Process call node-graphicksmagick module to process images
 and return file stream to callback
 ###
 
 module.exports = class Processor
-  im: im
+  gm: gm
 
   constructor: (@config)->
 
@@ -72,10 +72,10 @@ module.exports = class Processor
   process: (method, name, path, version, callback)->
     size = @getSize(version.size)
     gmi = @gm(path);
-    output = name + "." + (version.extension or @config.extension)
+    format = version.extension or @config.extension
     if name is "resize"
       gmi.resize size.width, size.height
     if name is "crop"
       gmi.crop size.width, size.height, 0, 0
     gmi.quality version.quality or @config.quality
-    gmi.write output, callback
+    gmi.toBuffer format, callback
