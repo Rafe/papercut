@@ -71,12 +71,11 @@ module.exports = class Processor
   ###
   process: (method, name, path, version, callback)->
     size = @getSize(version.size)
-    params =
-      srcPath: path
-      width: size.width
-      height: size.height
-      format: version.extension or @config.extension
-      quality: version.quality or @config.quality
-      customArgs: version.custom or @config.custom
-
-    @im[method] params, callback
+    gmi = @gm(path);
+    output = name + "." + (version.extension or @config.extension)
+    if name is "resize"
+      gmi.resize size.width, size.height
+    if name is "crop"
+      gmi.crop size.width, size.height, 0, 0
+    gmi.quality version.quality or @config.quality
+    gmi.write output, callback
