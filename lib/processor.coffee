@@ -1,13 +1,13 @@
 fs = require('fs')
-im = require('imagemagick')
+gm = require('gm')
 
 ###
-Process call node-imagemagick module to process images
+Process call node-graphicsmagick module to process images
 and return file stream to callback
 ###
 
 module.exports = class Processor
-  im: im
+  gm: gm
 
   constructor: (@config)->
 
@@ -16,7 +16,7 @@ module.exports = class Processor
     width: s[0], height: s[1]
 
   ###
-  Resize and crop image using node-imagemagic's crop method
+  Resize and crop image using node-graphicsmagick's crop method
 
   @param {String} name
   @param {String} path
@@ -59,7 +59,7 @@ module.exports = class Processor
 
   ###
   Process image with methods,
-  build params and call node-imagemagick's method
+  build params and call node-graphicsmagick's method
 
   @param {String} method
   @param {String} name
@@ -71,12 +71,11 @@ module.exports = class Processor
   ###
   process: (method, name, path, version, callback)->
     size = @getSize(version.size)
-    params =
-      srcPath: path
-      width: size.width
-      height: size.height
-      format: version.extension or @config.extension
-      quality: version.quality or @config.quality
-      customArgs: version.custom or @config.custom
-
-    @im[method] params, callback
+    gmi = @gm(path)
+    format = version.extension or @config.extension
+    if method is "resize"
+      gmi.resize size.width, size.height
+    if method is "crop"
+      gmi.crop size.width, size.height, 0, 0
+    gmi.quality version.quality or @config.quality
+    gmi.toBuffer format, callback

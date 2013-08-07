@@ -8,7 +8,7 @@ config = {
   extension: 'jpg'
   process: 'resize'
   directory: '.'
-  quality: 1,
+  quality: 90,
   custom: []
 }
 
@@ -146,8 +146,8 @@ module.exports = papercut =
         errors = []
         async.forEach @versions, (version, done)=>
           method = version.process or @config.process
-          @processor[method] name, path, version, (err, stdout, stderr)=>
+          @processor[method] name, path, version, (err, buffer)=>
             return done(err) if err?
-            @store.save(name, version, stdout, stderr, done)
+            @store.save(name, version, buffer, done)
         , (err)=>
           callback(err, @store.result)
