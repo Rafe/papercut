@@ -8,7 +8,7 @@ config = {
   extension: 'jpg'
   process: 'resize'
   directory: '.'
-  quality: 1,
+  quality: 90,
   custom: []
 }
 

@@ -47,7 +47,7 @@ exports.FileStore = class FileStore
     @result[version.name] = @getUrlPath(name, version)
 
     fs.writeFile @getDstPath(name, version), buffer, 'binary', (err, file)=>
-      callback(err, @result[version.name])
+        callback(err, @result[version.name])
 
 ###
 Upload file to Amazon S3 and return the url of file
