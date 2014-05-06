@@ -21,6 +21,10 @@ AvatarUploader = papercut.Schema (schema)->
   @version
     name: 'avatar'
     size: '200x200'
+  
+  @version
+    name: 'origin'
+    process: 'copy'
 
 express = require('express')
 app = express()
@@ -48,8 +52,10 @@ imageId = 0
 
 app.post '/avatar', (req, res)->
   uploader = new AvatarUploader()
+  timeStamp = new Date()
+  timeStamp = timeStamp.getTime()
 
-  uploader.process "#{imageId++}", req.files.avatar.path, (err, images)->
+  uploader.process "#{timeStamp}_#{req.files.avatar.name}", req.files.avatar.path, (err, images)->
     res.send 200, """
       <html>
         <head>
