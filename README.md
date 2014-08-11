@@ -48,9 +48,14 @@ In terminal:
 
     uploader = new AvatarUploader();
 
-    uploader.process('image1', file.path, function(images){
+    uploader.process('image1', file.path, function(err, images){
       console.log(images.avatar); // '/images/uploads/image1-avatar.jpg'
       console.log(images.small); // '/images/uploads/image1-small.jpg'
+    })
+
+    uploader.remove('image2', function(err, images){
+      console.log(images.avatar); // '/images/uploads/image2-avatar.jpg'
+      console.log(images.small); // '/images/uploads/image2-small.jpg'
     })
 
 ## Configuration
@@ -130,6 +135,22 @@ Also with images url in different versions:
       //  origin: '/images/upload/412341-origin.jpg'
       // }
     });
+
+## Remove
+
+With remove, you can pass the image identifier to remove all image versions:
+
+    var uploader = new Uploader();
+
+    uploader.remove('412341', function(err, images) {
+      console.log(images);
+      // {
+      //  thumbnail: '/images/upload/412341-thumbnail.jpg',
+      //  large: '/images/upload/412341-large.jpg',
+      //  origin: '/images/upload/412341-origin.jpg'
+      // }
+    });
+
 
 ##Express
 
