@@ -51,6 +51,21 @@ exports.FileStore = class FileStore
     fs.writeFile @getDstPath(name, version), stdout, 'binary', (err, file)=>
       callback(err, @result[version.name])
 
+  ###
+  Delete image from directory and return all version url path to callback
+
+  @param {String} name
+  @param {Object} version
+  @param {Function} callback
+
+  @api public
+  ###
+  delete: (name, version, callback)=>
+    @result[version.name] = @getUrlPath(name, version)
+
+    fs.unlink @getDstPath(name, version), (err)=>
+      callback(err, @result[version.name])
+
 ###
 Upload file to Amazon S3 and return the url of file
 Using knox module to upload
@@ -112,6 +127,20 @@ exports.S3Store = class S3Store
       @result[version.name] = @getUrlPath(name, version)
       callback(err, @result[version.name])
 
+  ###
+  Delete file from S3 and return url path
+
+  @param {String} name
+  @param {Object} version
+  @param {Function} callback
+
+  @api public
+  ###
+  delete: (name, version, callback)=>
+    @client.deleteFile @getDstPath(name, version), (err, res) =>
+      @result[version.name] = @getUrlPath(name, version)
+      callback(err, @result[version.name])
+
 ###
 Test store for testing
 ###
@@ -128,3 +157,6 @@ exports.TestStore = class TestStore
   save: (name, version, stdout, stderr, callback)=>
     @result[version.name] = @getUrlPath(name, version)
     callback(null, @result[version.name])
+
+  delete: (name, version, callback)=>
+    callback(null, @getUrlPath(name, version))

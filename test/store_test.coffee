@@ -45,6 +45,23 @@ describe 'FileStore', ->
 
     after cleanFiles
 
+  describe 'delete', ->
+    before (done)->
+      fs.open(path.join(dir, '/test-test.jpg'), 'w', done)
+
+    it 'should delete file', (done)->
+      store.delete 'test', version, (err, url)->
+        fs.existsSync(path.join(dir, '/test-test.jpg')).should.not.be.ok
+        url.should.eql '/images/test-test.jpg'
+        done()
+
+    it 'should handle error', (done)->
+      store.delete 'no-file', version, (err, url)->
+        err.message.should.eql 'ENOENT, unlink \'images/output/no-file-test.jpg\''
+        done()
+
+    after cleanFiles
+
 describe "S3Store", ->
   store = ''
   version = ''
@@ -61,6 +78,8 @@ describe "S3Store", ->
     store.client =
       putBuffer: (buffer, dstPath, headers, callback)->
         callback()
+      deleteFile: (dstPath, callback)->
+        callback()
 
   it 'should return dstPath', ->
     store.getDstPath('test', version)
@@ -75,7 +94,7 @@ describe "S3Store", ->
       url.should.eql store.awsUrl + '/test/test-test.jpg'
       done()
 
-  it 'should handle process error', (done)->
+  it 'should handle upload process error', (done)->
     store.save 'test', version, 'test', 'Error', (err, url)->
       err.message.should.eql 'Error'
       done()
@@ -89,6 +108,20 @@ describe "S3Store", ->
       err.message.should.eql 'Upload Error'
       done()
 
+  it 'should remove file from s3', (done)->
+    store.delete 'test', version, (err, url)->
+      url.should.eql store.awsUrl + '/test/test-test.jpg'
+      done()
+
+  it 'should handle remove error', (done)->
+    store.client =
+      deleteFile: (dstPath, callback)->
+        callback(new Error('Upload Error'))
+
+    store.delete 'test', version, (err, url)->
+      err.message.should.eql 'Upload Error'
+      done()
+
 describe "TestStore", ->
   it "do nothing on storing images", ->
     version = 
@@ -97,4 +130,6 @@ describe "TestStore", ->
     store = new TestStore
       extension: 'jpg'
     store.save 'test', version, 'test', null, (err, url)->
+      url.should.eql 'test-test.jpg'
+    store.delete 'test', version, (err, url)->
       url.should.eql 'test-test.jpg'

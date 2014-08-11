@@ -114,7 +114,7 @@ describe 'papercut', ->
             process: 'resize'
         uploader = new Uploader()
 
-      it 'process and store image to directory', (done)->
+      it 'should process and store image to directory', (done)->
         uploader.process 'test', sample, (err, images)->
           fs.existsSync('./images/output/test-cropped.jpg').should.be.true
           fs.existsSync('./images/output/test-resized.jpg').should.be.true
@@ -136,6 +136,46 @@ describe 'papercut', ->
       #should in processor_test
       it 'should throw no file error', (done)->
         uploader.process 'nofile', './images/nofile.jpg', (err, images)->
+          err.should.be.ok
+          done()
+
+      after cleanFiles
+
+    describe 'remove', ->
+      uploader = ''
+      beforeEach ->
+        papercut.set('directory', './images/output')
+        papercut.set('url', '/images')
+        papercut.set('storage', 'file')
+        Uploader = papercut.Schema ->
+          @version
+            name: 'cropped'
+            size: '250x250'
+            process: 'crop'
+          @version
+            name: 'origin'
+            process: 'copy'
+          @version
+            name: 'resized'
+            size: '250x250'
+            process: 'resize'
+        uploader = new Uploader()
+        fs.open('./images/output/test-cropped.jpg', 'w')
+        fs.open('./images/output/test-origin.jpg', 'w')
+        fs.open('./images/output/test-resized.jpg', 'w')
+
+      it 'should remove images in directory', (done)->
+        uploader.remove 'test', (err, images)->
+          fs.existsSync('./images/output/test-cropped.jpg').should.not.be.ok
+          fs.existsSync('./images/output/test-resized.jpg').should.not.be.ok
+          fs.existsSync('./images/output/test-origin.jpg').should.not.be.ok
+          images.origin.should.eql '/images/test-origin.jpg'
+          images.cropped.should.eql '/images/test-cropped.jpg'
+          images.resized.should.eql '/images/test-resized.jpg'
+          done()
+
+      it 'should throw no file error', (done)->
+        uploader.remove 'nofile', (err, images)->
           err.should.be.ok
           done()
 

@@ -151,3 +151,28 @@ module.exports = papercut =
             @store.save(name, version, stdout, stderr, done)
         , (err)=>
           callback(err, @store.result)
+
+      ###
+      Remove image according versions and storage
+
+      Example:
+
+        uploader.remove '2341230', (err, result)->
+          console.log result
+          # {
+          #   large: '/images/2341230-large.jpg'
+          #   thumbnail: '/images/2341230-thumbnail.jpg'
+          # }
+
+      @param {String} name
+      @param {Function} callback
+
+      @api public
+      ###
+
+      remove: (name, callback)->
+        errors = []
+        async.forEach @versions, (version, done)=>
+          @store.delete(name, version, done)
+        , (err)=>
+          callback(err, @store.result)
