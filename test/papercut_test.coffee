@@ -38,7 +38,7 @@ describe 'papercut', ->
         papercut.set 'storage', 'file'
         Uploader = papercut.Schema ->
         uploader = new Uploader()
-        uploader.store.should.be.an.instanceof FileStore
+        uploader.getStore().should.be.an.instanceof FileStore
 
       it "initialize S3Store", ->
         papercut.set 'storage', 's3'
@@ -48,13 +48,13 @@ describe 'papercut', ->
 
         Uploader = papercut.Schema ->
         uploader = new Uploader()
-        uploader.store.should.be.an.instanceof S3Store
+        uploader.getStore().should.be.an.instanceof S3Store
 
       it "initialize TestStore", ->
         papercut.set 'storage', 'test'
         Uploader = papercut.Schema ->
         uploader = new Uploader()
-        uploader.store.should.be.an.instanceof TestStore
+        uploader.getStore().should.be.an.instanceof TestStore
 
     afterEach ->
       process.env.NODE_ENV = undefined
@@ -74,7 +74,17 @@ describe 'papercut', ->
       uploader = new Uploader()
       uploader.config.flag.should.be.ok
       uploader.config.store.should.eql 's3'
-      uploader.store
+
+    it 'change store configs in schema', ->
+      papercut.set('storage', 's3')
+      Uploader = papercut.Schema()
+      uploaderS3 = new Uploader()
+      uploaderFile = new Uploader()
+
+      uploaderFile.set('storage', 'file')
+
+      uploaderS3.getStore().should.be.an.instanceof S3Store
+      uploaderFile.getStore().should.be.an.instanceof FileStore
 
     it 'store versions', ->
       Uploader = papercut.Schema ->

@@ -1,3 +1,4 @@
+extend = require('util')._extend
 knox = require('knox')
 async = require('async')
 {FileStore, S3Store, TestStore } = require('./store')
@@ -92,18 +93,57 @@ module.exports = papercut =
     class Uploader
       constructor: ->
         @versions = []
-        @config = config
+        @config = extend {}, config
         @processor = new Processor(@config)
         initializer.call(@, @) if initializer?
 
+      ###
+      Get config value
+
+      @param {String} name
+
+      @api public
+      ###
+
+      get: (name)->
+        @config[name]
+
+      ###
+      Set value to config
+
+      @param {String} name
+      @param {Object} value
+
+      @api public
+      ###
+
+      set: (name, value)->
+        @config[name] = value
+
+      ###
+      Get Storage, according to your storage config
+
+      @api public
+      ###
+
+      getStore: ->
         if @config.storage is 'file'
-          @store = new FileStore(@config)
+          return new FileStore(@config)
         else if @config.storage is 's3'
-          @store = new S3Store(@config)
+          return new S3Store(@config)
         else if @config.storage is 'test'
-          @store = new TestStore(@config)
+          return new TestStore(@config)
         else
           throw new Error('No storage type')
+
+      ###
+      Set value to config
+
+      @param {String} name
+      @param {Object} value
+
+      @api public
+      ###
 
       ###
       Set image name, process method and size
@@ -144,10 +184,11 @@ module.exports = papercut =
 
       process: (name, path, callback)->
         errors = []
+        store = @getStore()
         async.forEach @versions, (version, done)=>
           method = version.process or @config.process
           @processor[method] name, path, version, (err, stdout, stderr)=>
             return done(err) if err?
-            @store.save(name, version, stdout, stderr, done)
+            store.save(name, version, stdout, stderr, done)
         , (err)=>
-          callback(err, @store.result)
+          callback(err, store.result)
