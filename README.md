@@ -115,6 +115,22 @@ You can also set custom param according to version
       });
     });
 
+Furthermore, you can configure the schema to use a different storage mechanism
+
+    var Uploader = papercut.Schema(function(schema){
+      schema.set('storage', 'file');
+      schema.set('directory', './images/upload');
+      schema.set('url', '/images');
+      schema.set('extension', 'png');
+
+      schema.version({
+        name: 'auto',
+        size: '120x120',
+        process: 'crop'
+        custom: ['-auto-orient']
+      });
+    });
+
 ## Process
 
 With uploader, you can pass the image identifier and image path to process images.  
