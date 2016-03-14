@@ -66,7 +66,7 @@ exports.S3Store = class S3Store
       bucket: config.bucket
     @headers =
       'Content-Type': "image/#{@config.extension}"
-      'x-amz-acl': 'public-read'
+      'x-amz-acl': "#{@config.acl}"
 
   ###
   Get relative file path on S3

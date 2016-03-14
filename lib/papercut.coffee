@@ -9,7 +9,8 @@ config = {
   process: 'resize'
   directory: '.'
   quality: 1,
-  custom: []
+  custom: [],
+  acl: 'public-read'
 }
 
 module.exports = papercut =
